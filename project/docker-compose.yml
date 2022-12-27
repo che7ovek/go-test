@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+    browser:
+        container_name: "go_screen"
+        build:
+            context: ./../browser
+            dockerfile: ./../browser/browser.dockerfile
+        ports:
+            - "7777:80"
+            - "6060:6060"
+        networks:
+            - internal
+
+    chromium:
+        container_name: "chromium"
+        image: "chromedp/headless-shell"
+        ports:
+            - "9222:9222"
+        networks:
+            - internal
+
+    server:
+        container_name: "bot_server"
+        build:
+            context: ./../server
+            dockerfile: ./../server/server.dockerfile
+        env_file: ./.env
+        ports:
+            - "5959:80"
+        networks:
+            - internal
+
+networks:
+    internal:
+        driver: bridge
